@@ -1,7 +1,7 @@
-name: Run Scraper
+name: Run Scraper on Payment.marjanemall
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:   # يتيح التشغيل اليدوي
 
 jobs:
   scrape:
@@ -14,10 +14,10 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'   # 👈 مهم جداً
+          python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install requests beautifulsoup4
+        run: pip install requests
 
       - name: Run scraper
         run: python scraper.py
