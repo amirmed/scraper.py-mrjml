@@ -1,46 +1,19 @@
 import requests
-from bs4 import BeautifulSoup
-from urllib.parse import urljoin, urlparse
 
-BASE_URL = "https://marjanemall.ma"
-FILTER_PATH = "/media/amasty/elastic/import"
-
-visited = set()
-to_visit = [BASE_URL]
+BASE = "https://payment.marjanemall.ma/media/amasty/elastic/import/"
 
 found_images = []
 
-def is_valid(url):
-    return urlparse(url).netloc == urlparse(BASE_URL).netloc
-
-while to_visit:
-    url = to_visit.pop()
-    if url in visited:
-        continue
-
-    visited.add(url)
-
+# يمكن تعديل الرقم الأعلى حسب عدد الصور المتوقع
+for i in range(1, 4201):  # يفحص 1.png إلى 200.png
+    url = f"{BASE}{i}.png"
     try:
-        print("Scanning:", url)
-        resp = requests.get(url, timeout=5)
-        html = resp.text
+        r = requests.head(url, timeout=5)
+        if r.status_code == 200:
+            found_images.append(url)
+            print("FOUND:", url)
     except:
         continue
-
-    soup = BeautifulSoup(html, "html.parser")
-
-    # جمع الروابط
-    for link in soup.find_all("a", href=True):
-        new_url = urljoin(url, link["href"])
-        if is_valid(new_url) and new_url not in visited:
-            to_visit.append(new_url)
-
-    # جمع الصور
-    for img in soup.find_all("img", src=True):
-        img_url = urljoin(url, img["src"])
-        if FILTER_PATH in img_url:
-            found_images.append(img_url)
-            print("FOUND:", img_url)
 
 # حفظ النتائج
 with open("results.txt", "w", encoding="utf-8") as f:
