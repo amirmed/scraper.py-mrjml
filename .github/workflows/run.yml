@@ -1,7 +1,7 @@
 name: Run Scraper
 
 on:
-  workflow_dispatch:   # يسمح لك بتشغيله يدوياً
+  workflow_dispatch:
 
 jobs:
   scrape:
@@ -14,7 +14,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.10
+          python-version: '3.10'   # 👈 مهم جداً
 
       - name: Install dependencies
         run: pip install requests beautifulsoup4
